@@ -11,4 +11,14 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.8 (/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7)" project-jdk-type="Python SDK" />
+  <component name="PuppetProjectConfiguration">
+    <environmentSettings>
+      <PuppetEnvironmentSettings currentEnvironmentName="master">
+        <environmentSet>
+          <Environment name="production" modulepath="/modules:/usr/share/puppet/modules:/opt/puppet/share/puppet/modules" />
+          <Environment name="master" modulepath="/modules:/usr/share/puppet/modules:/opt/puppet/share/puppet/modules" />
+        </environmentSet>
+      </PuppetEnvironmentSettings>
+    </environmentSettings>
+  </component>
 </project>

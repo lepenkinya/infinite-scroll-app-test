@@ -15,5 +15,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Google App Engine SDK" level="project" />
+    <orderEntry type="library" name="angular-touch" level="application" />
+    <orderEntry type="library" name="angular-animate" level="application" />
+    <orderEntry type="library" name="csv" level="application" />
+    <orderEntry type="library" name="pdfmake" level="application" />
+    <orderEntry type="library" name="vfs_fonts" level="application" />
+    <orderEntry type="library" name="stub [puppet module]" level="application" />
   </component>
 </module>

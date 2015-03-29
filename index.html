@@ -1,0 +1,22 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+
+    <link rel="stylesheet" href="ui-grid/ui-grid-unstable.min.css" type="text/css">
+    <script src="ui-grid/ui-grid-unstable.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div ng-controller="MainCtrl">
+      <button id="reset" class="button" ng-click="reset()">Reset</button>
+      <span> &nbsp; &nbsp; First page: {{ firstPage }} &nbsp; &nbsp; Last page: {{ lastPage }}  &nbsp; &nbsp; data.length: {{ data.length }} </span>
+      <div ui-grid="gridOptions" class="grid" ui-grid-infinite-scroll></div>
+    </div>
+  </body>
+</html>
