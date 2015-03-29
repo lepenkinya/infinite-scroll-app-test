@@ -3,15 +3,14 @@ var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.infiniteScroll']
 
 app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scope, $http, $timeout, $q) {
 
-    var PAGE_SIZE = 50;
-    var ITEMS_LEFT_WHEN_REQUEST_NEW_DATA = 20;
+    var ITEMS_NUMBER_TO_LOAD = 50;
 
     function entriesRangeUrl(start, end) {
         return '/entries?start=' + start + '&end=' + end;
     }
 
     $scope.gridOptions = {
-        infiniteScrollRowsFromEnd: ITEMS_LEFT_WHEN_REQUEST_NEW_DATA,
+        infiniteScrollRowsFromEnd: 20,
         infiniteScrollUp: true,
         infiniteScrollDown: true,
         columnDefs: [
@@ -28,7 +27,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
 
     $scope.getFirstData = function () {
         var promise = $q.defer();
-        $http.get(entriesRangeUrl(0, PAGE_SIZE))
+        $http.get(entriesRangeUrl(0, ITEMS_NUMBER_TO_LOAD))
             .success(function (data) {
                 $scope.data = $scope.data.concat(data);
                 promise.resolve();
@@ -39,7 +38,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
     $scope.getDataDown = function () {
         var promise = $q.defer();
         var length = $scope.data.length;
-        $http.get(entriesRangeUrl(length, length + PAGE_SIZE))
+        $http.get(entriesRangeUrl(length, length + ITEMS_NUMBER_TO_LOAD))
             .success(function (data) {
                 var dataLength = data.length;
                 if (dataLength > 0) {
