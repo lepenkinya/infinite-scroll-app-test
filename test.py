@@ -38,6 +38,14 @@ class MainApplicationTest(unittest.TestCase):
         self.assertListEqual(json_response, expected)
 
 
+    def test_no_more_then_500(self):
+        response = self.testapp.get('/entries?start=499&end=1000')
+        json_response = json.loads(response.body)
+        self.assertEqual(response.status_int, 200)
+        expected = self.entry_names_to_data(['Entry 499'])
+        self.assertListEqual(json_response, expected)
+
+
 
     def entry_names_to_data(self, entries):
         result = []

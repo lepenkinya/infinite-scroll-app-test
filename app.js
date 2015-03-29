@@ -5,7 +5,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
 
     var PAGE_SIZE = 50;
     var ITEMS_LEFT_WHEN_REQUEST_NEW_DATA = 20;
-    var MAX_PAGES_TO_SHOW = 10;
 
     function entriesRangeUrl(start, end) {
         return '/entries?start=' + start + '&end=' + end;
@@ -46,13 +45,13 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
         var lastItemIndex = ($scope.lastPage + 1) * PAGE_SIZE;
         $http.get(entriesRangeUrl(lastItemIndex, lastItemIndex + PAGE_SIZE))
             .success(function (data) {
-                $scope.lastPage++;
-                $scope.gridApi.infiniteScroll.saveScrollPercentage();
-                $scope.data = $scope.data.concat(data);
+                var dataLength = data.length;
+                if (dataLength > 0) {
+                    $scope.lastPage++;
+                    $scope.gridApi.infiniteScroll.saveScrollPercentage();
+                    $scope.data = $scope.data.concat(data);
+                }
                 $scope.gridApi.infiniteScroll.dataLoaded($scope.firstPage > 0, true)
-                    .then(function () {
-                        $scope.checkDataLength('up');
-                    })
                     .then(function () {
                         promise.resolve();
                     });
@@ -74,13 +73,13 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
 
         $http.get(entriesRangeUrl(startIndex, $scope.firstPage * PAGE_SIZE))
             .success(function (data) {
-                $scope.firstPage--;
-                $scope.gridApi.infiniteScroll.saveScrollPercentage();
-                $scope.data = data.concat($scope.data);
+                var dataLength = data.length;
+                if (dataLength > 0) {
+                    $scope.firstPage--;
+                    $scope.gridApi.infiniteScroll.saveScrollPercentage();
+                    $scope.data = data.concat($scope.data);
+                }
                 $scope.gridApi.infiniteScroll.dataLoaded($scope.firstPage > 0, true)
-                    .then(function() {
-                        $scope.checkDataLength('down');
-                    })
                     .then(function() {
                         promise.resolve();
                     });
@@ -91,30 +90,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
             });
 
         return promise.promise;
-    };
-
-    $scope.checkDataLength = function (discardDirection) {
-        // work out whether we need to discard a page, if so discard from the direction passed in
-        if ($scope.lastPage - $scope.firstPage > 3) {
-            // we want to remove a page
-            $scope.gridApi.infiniteScroll.saveScrollPercentage();
-
-            //if (discardDirection === 'up') {
-            //    $scope.data = $scope.data.slice(100);
-            //    $scope.firstPage++;
-            //    $timeout(function () {
-            //         wait for grid to ingest data changes
-            //        $scope.gridApi.infiniteScroll.dataRemovedTop($scope.firstPage > 0, $scope.lastPage < 4);
-            //    });
-            //} else {
-            //    $scope.data = $scope.data.slice(0, 400);
-            //    $scope.lastPage--;
-            //    $timeout(function () {
-                    // wait for grid to ingest data changes
-                    //$scope.gridApi.infiniteScroll.dataRemovedBottom($scope.firstPage > 0, $scope.lastPage < 4);
-                //});
-            //}
-        }
     };
 
     $scope.reset = function () {

@@ -13,6 +13,9 @@ class EntriesHandler(webapp2.RequestHandler):
         if len(range_start) > 0 and len(range_end) > 0:
             start = int(range_start)
             end = int(range_end)
+
+            end = end if end < 500 else 500
+
             for i in range(start, end):
                 result.append({'name': "Entry " + str(i)})
 
