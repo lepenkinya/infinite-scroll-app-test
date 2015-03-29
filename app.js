@@ -20,7 +20,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
         data: 'data',
         onRegisterApi: function (gridApi) {
             gridApi.infiniteScroll.on.needLoadMoreData($scope, $scope.getDataDown);
-            gridApi.infiniteScroll.on.needLoadMoreDataTop($scope, $scope.getDataUp);
             $scope.gridApi = gridApi;
         }
     };
@@ -51,7 +50,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
                     $scope.gridApi.infiniteScroll.saveScrollPercentage();
                     $scope.data = $scope.data.concat(data);
                 }
-                $scope.gridApi.infiniteScroll.dataLoaded($scope.firstPage > 0, true)
+                $scope.gridApi.infiniteScroll.dataLoaded(false, true)
                     .then(function () {
                         promise.resolve();
                     });
@@ -60,35 +59,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
                 $scope.gridApi.infiniteScroll.dataLoaded();
                 promise.reject();
             });
-        return promise.promise;
-    };
-
-    $scope.getDataUp = function () {
-        var promise = $q.defer();
-        var startIndex = ($scope.firstPage - 1) * PAGE_SIZE;
-        if (startIndex < 0) {
-            promise.reject();
-            return promise.promise;
-        }
-
-        $http.get(entriesRangeUrl(startIndex, $scope.firstPage * PAGE_SIZE))
-            .success(function (data) {
-                var dataLength = data.length;
-                if (dataLength > 0) {
-                    $scope.firstPage--;
-                    $scope.gridApi.infiniteScroll.saveScrollPercentage();
-                    $scope.data = data.concat($scope.data);
-                }
-                $scope.gridApi.infiniteScroll.dataLoaded($scope.firstPage > 0, true)
-                    .then(function() {
-                        promise.resolve();
-                    });
-            })
-            .error(function (error) {
-                $scope.gridApi.infiniteScroll.dataLoaded();
-                promise.reject();
-            });
-
         return promise.promise;
     };
 
@@ -103,7 +73,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
         $scope.getFirstData().then(function () {
             $timeout(function () {
                 // timeout needed to allow digest cycle to complete,and grid to finish ingesting the data
-                $scope.gridApi.infiniteScroll.resetScroll($scope.firstPage > 0, true);
+                $scope.gridApi.infiniteScroll.resetScroll(true, true);
             });
         });
     };
@@ -114,7 +84,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
             // you need to call resetData once you've loaded your data if you want to enable scroll up,
             // it adjusts the scroll position down one pixel so that we can generate scroll up events
             //$scope.gridApi.infiniteScroll.resetScroll($scope.firstPage > 0, $scope.lastPage < 4);
-            $scope.gridApi.infiniteScroll.resetScroll($scope.firstPage > 0, true);
+            $scope.gridApi.infiniteScroll.resetScroll(true, true);
         });
     });
 
