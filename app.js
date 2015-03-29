@@ -25,7 +25,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
     };
 
     $scope.data = [];
-    $scope.lastPage = 0;
 
     $scope.getFirstData = function () {
         var promise = $q.defer();
