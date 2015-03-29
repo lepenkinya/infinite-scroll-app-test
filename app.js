@@ -25,8 +25,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
     };
 
     $scope.data = [];
-
-    $scope.firstPage = 0;
     $scope.lastPage = 0;
 
     $scope.getFirstData = function () {
@@ -41,12 +39,11 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
 
     $scope.getDataDown = function () {
         var promise = $q.defer();
-        var lastItemIndex = ($scope.lastPage + 1) * PAGE_SIZE;
-        $http.get(entriesRangeUrl(lastItemIndex, lastItemIndex + PAGE_SIZE))
+        var length = $scope.data.length;
+        $http.get(entriesRangeUrl(length, length + PAGE_SIZE))
             .success(function (data) {
                 var dataLength = data.length;
                 if (dataLength > 0) {
-                    $scope.lastPage++;
                     $scope.gridApi.infiniteScroll.saveScrollPercentage();
                     $scope.data = $scope.data.concat(data);
                 }
@@ -63,9 +60,6 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
     };
 
     $scope.reset = function () {
-        $scope.firstPage = 0;
-        $scope.lastPage = 0;
-
         // turn off the infinite scroll handling up and down - hopefully this won't be needed after @swalters scrolling changes
         $scope.gridApi.infiniteScroll.setScrollDirections(false, false);
         $scope.data = [];
