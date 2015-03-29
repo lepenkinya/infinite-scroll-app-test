@@ -23,6 +23,22 @@ class MainApplicationTest(unittest.TestCase):
         expected = self.entry_names_to_data(['Entry 17', 'Entry 18', 'Entry 19', 'Entry 20'])
         self.assertListEqual(json_response, expected)
 
+
+    def test_no_range_no_entries(self):
+        response = self.testapp.get('/entries?start=17&end=5')
+        json_response = json.loads(response.body)
+        self.assertEqual(response.status_int, 200)
+        self.assertListEqual(json_response, [])
+
+    def test_negative_entries(self):
+        response = self.testapp.get('/entries?start=-1&end=3')
+        json_response = json.loads(response.body)
+        self.assertEqual(response.status_int, 200)
+        expected = self.entry_names_to_data(['Entry -1', 'Entry 0', 'Entry 1', 'Entry 2'])
+        self.assertListEqual(json_response, expected)
+
+
+
     def entry_names_to_data(self, entries):
         result = []
         for entry in entries:
