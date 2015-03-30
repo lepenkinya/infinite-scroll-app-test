@@ -3,10 +3,16 @@ var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.infiniteScroll']
 
 app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scope, $http, $timeout, $q) {
 
+    $scope.currentSearchWord = '';
+
+    $scope.onSearchFieldChange = function() {
+        $scope.reset();
+    };
+
     var ITEMS_NUMBER_TO_LOAD = 50;
 
-    function entriesRangeUrl(start, end) {
-        return '/entries?start=' + start + '&end=' + end;
+    function entriesRangeUrl(start, end, word) {
+        return '/entries?start=' + start + '&end=' + end + '&word=' + word;
     }
 
     $scope.gridOptions = {
@@ -27,7 +33,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
 
     $scope.getFirstData = function () {
         var promise = $q.defer();
-        $http.get(entriesRangeUrl(0, ITEMS_NUMBER_TO_LOAD))
+        $http.get(entriesRangeUrl(0, ITEMS_NUMBER_TO_LOAD, $scope.currentSearchWord))
             .success(function (data) {
                 $scope.data = $scope.data.concat(data);
                 promise.resolve();
@@ -38,7 +44,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$q', function ($scop
     $scope.getDataDown = function () {
         var promise = $q.defer();
         var length = $scope.data.length;
-        $http.get(entriesRangeUrl(length, length + ITEMS_NUMBER_TO_LOAD))
+        $http.get(entriesRangeUrl(length, length + ITEMS_NUMBER_TO_LOAD, $scope.currentSearchWord))
             .success(function (data) {
                 var dataLength = data.length;
                 if (dataLength > 0) {

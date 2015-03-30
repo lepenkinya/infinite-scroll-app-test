@@ -9,7 +9,7 @@ class MainApplicationTest(unittest.TestCase):
         self.testapp = webtest.TestApp(app)
 
     def test_get_range_of_entries(self):
-        response = self.testapp.get('/entries?start=0&end=3')
+        response = self.testapp.get('/entries?start=0&end=3&word=Entry')
         json_response = json.loads(response.body)
         self.assertEqual(response.status_int, 200)
         expected = self.entry_names_to_data(['Entry 0', 'Entry 1', 'Entry 2'])
@@ -17,7 +17,7 @@ class MainApplicationTest(unittest.TestCase):
 
 
     def test_get_random_range_of_entries(self):
-        response = self.testapp.get('/entries?start=17&end=21')
+        response = self.testapp.get('/entries?start=17&end=21&word=Entry')
         json_response = json.loads(response.body)
         self.assertEqual(response.status_int, 200)
         expected = self.entry_names_to_data(['Entry 17', 'Entry 18', 'Entry 19', 'Entry 20'])
@@ -25,13 +25,13 @@ class MainApplicationTest(unittest.TestCase):
 
 
     def test_no_range_no_entries(self):
-        response = self.testapp.get('/entries?start=17&end=5')
+        response = self.testapp.get('/entries?start=17&end=5&word=Entry')
         json_response = json.loads(response.body)
         self.assertEqual(response.status_int, 200)
         self.assertListEqual(json_response, [])
 
     def test_negative_entries(self):
-        response = self.testapp.get('/entries?start=-1&end=3')
+        response = self.testapp.get('/entries?start=-1&end=3&word=Entry')
         json_response = json.loads(response.body)
         self.assertEqual(response.status_int, 200)
         expected = self.entry_names_to_data(['Entry -1', 'Entry 0', 'Entry 1', 'Entry 2'])
@@ -39,10 +39,18 @@ class MainApplicationTest(unittest.TestCase):
 
 
     def test_no_more_then_500(self):
-        response = self.testapp.get('/entries?start=499&end=1000')
+        response = self.testapp.get('/entries?start=499&end=1000&word=Entry')
         json_response = json.loads(response.body)
         self.assertEqual(response.status_int, 200)
         expected = self.entry_names_to_data(['Entry 499'])
+        self.assertListEqual(json_response, expected)
+
+
+    def test_another_word(self):
+        response = self.testapp.get('/entries?start=0&end=3&word=Lax')
+        json_response = json.loads(response.body)
+        self.assertEqual(response.status_int, 200)
+        expected = self.entry_names_to_data(['Lax 0', 'Lax 1', 'Lax 2'])
         self.assertListEqual(json_response, expected)
 
 

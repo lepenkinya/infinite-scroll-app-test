@@ -7,6 +7,9 @@ class EntriesHandler(webapp2.RequestHandler):
     def get(self):
         range_start = self.request.get('start')
         range_end = self.request.get('end')
+        word = self.request.get('word')
+        word = (word if len(word) > 0 else 'Nothing') + ' '
+
 
         result = []
 
@@ -17,7 +20,7 @@ class EntriesHandler(webapp2.RequestHandler):
             end = end if end < 500 else 500
 
             for i in range(start, end):
-                result.append({'name': "Entry " + str(i)})
+                result.append({'name': word + str(i)})
 
         self.response.headers['Content-Type'] = "application/json"
         self.response.out.write(json.dumps(result))
